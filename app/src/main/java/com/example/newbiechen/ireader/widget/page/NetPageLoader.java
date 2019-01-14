@@ -221,5 +221,10 @@ public class NetPageLoader extends PageLoader {
                     .saveCollBook(mCollBook);
         }
     }
+
+    @Override
+    protected long getBookLength(){
+        return 0L;
+    }
 }
 

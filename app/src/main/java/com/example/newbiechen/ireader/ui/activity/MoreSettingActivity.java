@@ -34,10 +34,17 @@ public class MoreSettingActivity extends BaseActivity{
     RelativeLayout mRlConvertType;
     @BindView(R.id.more_setting_sc_convert_type)
     Spinner mScConvertType;
+
+    @BindView(R.id.more_setting_rl_progress_type)
+    RelativeLayout mRlProgressType;
+    @BindView(R.id.more_setting_sc_progress_type)
+    Spinner mScProgressType;
+
     private ReadSettingManager mSettingManager;
     private boolean isVolumeTurnPage;
     private boolean isFullScreen;
     private int convertType;
+    private int progressType;
     @Override
     protected int getContentId() {
         return R.layout.activity_more_setting;
@@ -50,6 +57,7 @@ public class MoreSettingActivity extends BaseActivity{
         isVolumeTurnPage = mSettingManager.isVolumeTurnPage();
         isFullScreen = mSettingManager.isFullScreen();
         convertType = mSettingManager.getConvertType();
+        progressType = mSettingManager.getProgressType();
     }
 
     @Override
@@ -116,6 +124,27 @@ public class MoreSettingActivity extends BaseActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mSettingManager.setConvertType(position);
                 convertType = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        //进度模式
+        ArrayAdapter<CharSequence> progressadapter = ArrayAdapter.createFromResource(this,
+                R.array.progress_type_array, android.R.layout.simple_spinner_item);
+        progressadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mScProgressType.setAdapter(progressadapter);
+
+        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
+        mScProgressType.setSelection(progressType);
+
+        mScProgressType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSettingManager.setProgressType(position);
+                progressType = position;
             }
 
             @Override

@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
+import android.util.Log;
 
 import com.example.newbiechen.ireader.model.bean.BookRecordBean;
 import com.example.newbiechen.ireader.model.bean.CollBookBean;
@@ -25,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -723,6 +725,7 @@ public abstract class PageLoader {
         mPageView.invalidate();
     }
 
+    protected abstract long getBookLength();
     private void drawBackground(Bitmap bitmap, boolean isUpdate) {
         Canvas canvas = new Canvas(bitmap);
         int tipMarginHeight = ScreenUtils.dpToPx(3);
@@ -749,9 +752,29 @@ public abstract class PageLoader {
                 float y = mDisplayHeight - mTipPaint.getFontMetrics().bottom - tipMarginHeight;
                 // 只有finish的时候采用页码
                 if (mStatus == STATUS_FINISH) {
-                    String percent = (mCurPage.position + 1) + "/" + mCurPageList.size();
-                    canvas.drawText(percent, mMarginWidth, y, mTipPaint);
+                    int progressType=mSettingManager.getProgressType();
+                    if(progressType==0){
+                        String percent = (mCurPage.position + 1) + "/" + mCurPageList.size();
+                        canvas.drawText(percent, mMarginWidth, y, mTipPaint);
+                    }else{
+                        TxtChapter curChapter=mChapterList.get(mCurChapterPos);
+                        int length=(int) getBookLength();
+                        int perPageLen=(int) (curChapter.end-curChapter.start)/mCurPageList.size();
+                        int totalPage=length/perPageLen;
+                        int pageStart=(int) curChapter.start/perPageLen;
+                        int curPage=pageStart+(mCurPage.position + 1);
+                        //Log.d(TAG, "Totallength: " + length);
+
+                        String percent = curPage + "/" + totalPage;
+                        canvas.drawText(percent, mMarginWidth, y, mTipPaint);
+
+                        float totalper = curPage*100/(float) totalPage;
+                        DecimalFormat df=new DecimalFormat("0.00");
+                        String total = df.format(totalper)+"%";
+                        canvas.drawText(total, mDisplayWidth/2, y, mTipPaint);
+                    }
                 }
+                //Log.d(TAG, "TxtChapter: " + mChapterList.get(mCurChapterPos));
             }
         } else {
             //擦除区域

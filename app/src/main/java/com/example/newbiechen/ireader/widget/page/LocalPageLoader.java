@@ -437,4 +437,9 @@ public class LocalPageLoader extends PageLoader {
     protected boolean hasChapterData(TxtChapter chapter) {
         return true;
     }
+
+    @Override
+    protected long getBookLength(){
+        return mBookFile.length();
+    }
 }

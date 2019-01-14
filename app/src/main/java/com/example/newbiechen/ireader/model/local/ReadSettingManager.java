@@ -29,6 +29,7 @@ public class ReadSettingManager {
     public static final String SHARED_READ_VOLUME_TURN_PAGE = "shared_read_volume_turn_page";
     public static final String SHARED_READ_FULL_SCREEN = "shared_read_full_screen";
     public static final String SHARED_READ_CONVERT_TYPE = "shared_read_convert_type";
+    public static final String SHARED_READ_PROGRESS_TYPE = "shared_read_progress_type";
 
     private static volatile ReadSettingManager sInstance;
 
@@ -127,7 +128,16 @@ public class ReadSettingManager {
         sharedPreUtils.putInt(SHARED_READ_CONVERT_TYPE, convertType);
     }
 
+
     public int getConvertType() {
         return sharedPreUtils.getInt(SHARED_READ_CONVERT_TYPE, 0);
+    }
+
+    public void setProgressType(int progressType) {
+        sharedPreUtils.putInt(SHARED_READ_PROGRESS_TYPE, progressType);
+    }
+
+    public int getProgressType() {
+        return sharedPreUtils.getInt(SHARED_READ_PROGRESS_TYPE, 0);
     }
 }
