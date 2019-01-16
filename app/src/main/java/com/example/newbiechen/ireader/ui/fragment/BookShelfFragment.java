@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,14 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     //是否是第一次进入
     private boolean isInit = true;
 
+    private static final int SPAN_COUNT = 3;
+    public enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
+    }
+    protected LayoutManagerType mCurrentLayoutManagerType;
+    protected RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected int getContentId() {
         return R.layout.fragment_bookshelf;
@@ -73,9 +83,32 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     private void setUpAdapter() {
         //添加Footer
         mCollBookAdapter = new CollBookAdapter();
-        mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
+        setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
         mRvContent.addItemDecoration(new DividerItemDecoration(getContext()));
         mRvContent.setAdapter(mCollBookAdapter);
+    }
+
+    /**
+     * Set RecyclerView's LayoutManager to the one given.
+     *
+     * @param layoutManagerType Type of layout manager to switch to.
+     */
+    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+        switch (layoutManagerType) {
+            case GRID_LAYOUT_MANAGER:
+                mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
+                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                break;
+            case LINEAR_LAYOUT_MANAGER:
+                mLayoutManager = new LinearLayoutManager(getContext());
+                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                break;
+            default:
+                mLayoutManager = new LinearLayoutManager(getContext());
+                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+
+        mRvContent.setLayoutManager(mLayoutManager);
     }
 
     @Override

@@ -58,6 +58,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_shelf_mode"
+        android:title="@string/nb.menu.action.shelf_mode"
+        android:icon="@drawable/ic_menu_gridview"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/nb.menu.action.setting"
         android:icon="@drawable/ic_menu_setting"

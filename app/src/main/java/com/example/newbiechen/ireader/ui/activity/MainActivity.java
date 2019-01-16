@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
@@ -152,6 +153,12 @@ public class MainActivity extends BaseTabActivity{
             case R.id.action_night_mode:
                 break;
             case R.id.action_settings:
+                break;
+            case R.id.action_shelf_mode:
+                item.setTitle("列表模式");
+                item.setIcon(R.drawable.ic_menu_listview);
+
+                ((BookShelfFragment) mFragmentList.get(0)).setRecyclerViewLayoutManager(BookShelfFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
                 break;
             default:
                 break;

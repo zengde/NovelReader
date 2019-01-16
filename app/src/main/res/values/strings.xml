@@ -106,6 +106,7 @@
     <string name="nb.menu.action.transfer">WIFI传书</string>
     <string name="nb.menu.action.feedback">意见反馈</string>
     <string name="nb.menu.action.night_mode">夜间模式</string>
+    <string name="nb.menu.action.shelf_mode">书架模式</string>
     <string name="nb.menu.action.setting">设置</string>
     
     <string name="nb.menu.action.top">置顶</string>
