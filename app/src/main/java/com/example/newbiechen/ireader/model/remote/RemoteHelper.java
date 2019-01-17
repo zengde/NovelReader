@@ -41,7 +41,7 @@ public class RemoteHelper {
 
         mRetrofit = new Retrofit.Builder()
                 .client(mOkHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(RemoteConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(Constant.API_BASE_URL)
                 .build();

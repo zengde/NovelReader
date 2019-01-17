@@ -252,7 +252,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
 
     @Override
     public void finishHotComment(List<HotCommentBean> beans) {
-        if (beans.isEmpty()) {
+        if (beans==null||beans.isEmpty()) {
             return;
         }
         mHotCommentAdapter = new HotCommentAdapter();
@@ -270,7 +270,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
 
     @Override
     public void finishRecommendBookList(List<BookListBean> beans) {
-        if (beans.isEmpty()) {
+        if (beans==null||beans.isEmpty()) {
             mTvRecommendBookList.setVisibility(View.GONE);
             return;
         }

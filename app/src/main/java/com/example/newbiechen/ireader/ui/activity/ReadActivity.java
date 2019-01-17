@@ -291,6 +291,10 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         if (Build.VERSION.SDK_INT >= 19) {
             mAblTopMenu.setPadding(0, ScreenUtils.getStatusBarHeight(), 0, 0);
         }
+        if(mCollBook.isLocal()){
+            mTvCommunity.setVisibility(View.GONE);
+            mTvBrief.setVisibility(View.GONE);
+        }
     }
 
     private void initBottomMenu() {

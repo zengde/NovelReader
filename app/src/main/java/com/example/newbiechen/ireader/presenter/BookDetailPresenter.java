@@ -4,13 +4,17 @@ import android.util.Log;
 
 import com.example.newbiechen.ireader.model.bean.BookChapterBean;
 import com.example.newbiechen.ireader.model.bean.BookDetailBean;
+import com.example.newbiechen.ireader.model.bean.BookListBean;
 import com.example.newbiechen.ireader.model.bean.CollBookBean;
+import com.example.newbiechen.ireader.model.bean.HotCommentBean;
 import com.example.newbiechen.ireader.model.local.BookRepository;
 import com.example.newbiechen.ireader.model.remote.RemoteRepository;
 import com.example.newbiechen.ireader.presenter.contract.BookDetailContract;
 import com.example.newbiechen.ireader.ui.base.RxPresenter;
 import com.example.newbiechen.ireader.utils.LogUtils;
 import com.example.newbiechen.ireader.utils.MD5Utils;
+
+import java.util.List;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -96,26 +100,50 @@ public class BookDetailPresenter extends RxPresenter<BookDetailContract.View>
     }
 
     private void refreshComment(){
-        Disposable disposable = RemoteRepository
+        RemoteRepository
                 .getInstance()
                 .getHotComments(bookId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (value) -> mView.finishHotComment(value)
-                );
-        addDisposable(disposable);
+                .subscribe(new SingleObserver<List<HotCommentBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onSuccess(List<HotCommentBean> value){
+                        mView.finishHotComment(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.showError();
+                    }
+                });
     }
 
     private void refreshRecommend(){
-        Disposable disposable = RemoteRepository
+        RemoteRepository
                 .getInstance()
                 .getRecommendBookList(bookId,3)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (value) -> mView.finishRecommendBookList(value)
-                );
-        addDisposable(disposable);
+                .subscribe(new SingleObserver<List<BookListBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onSuccess(List<BookListBean> value){
+                        mView.finishRecommendBookList(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.showError();
+                    }
+                });
     }
 }
