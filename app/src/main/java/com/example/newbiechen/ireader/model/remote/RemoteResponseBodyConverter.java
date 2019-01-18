@@ -2,7 +2,10 @@ package com.example.newbiechen.ireader.model.remote;
 
 import com.example.newbiechen.ireader.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,12 +26,14 @@ public class RemoteResponseBodyConverter<T> implements Converter<ResponseBody, T
     public T convert(ResponseBody value) throws IOException {
         String response=value.string();
         try{
-            RemotResponse result=gson.fromJson(response,RemotResponse.class);
-            if(!result.isOk()){
-                throw new ApiException(result);
+            JSONObject json=new JSONObject(response);
+            if(json.has("ok")&&!json.getBoolean("ok")){
+                throw new ApiException(json.getString("msg"));
             }
             return adapter.read(gson.newJsonReader(new StringReader(response)));
-        }finally {
+        }catch (Exception e){
+            throw new ApiException("返回数据错误！");
+        }finally{
             value.close();
         }
     }

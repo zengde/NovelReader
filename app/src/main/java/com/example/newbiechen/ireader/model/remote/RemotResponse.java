@@ -22,7 +22,7 @@ public class RemotResponse<T> {
     }
 
     public String getMsg() {
-        return msg;
+        return msg==null||msg.isEmpty()? "未知错误":msg;
     }
 
     public void setMsg(String msg) {
