@@ -25,7 +25,7 @@ public class RemoteResponseBodyConverter<T> implements Converter<ResponseBody, T
         try{
             RemotResponse result=gson.fromJson(response,RemotResponse.class);
             if(!result.isOk()){
-                throw new RuntimeException();
+                throw new ApiException(result);
             }
             return adapter.read(gson.newJsonReader(new StringReader(response)));
         }finally {

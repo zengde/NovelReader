@@ -28,4 +28,9 @@ public class RemotResponse<T> {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+    @Override
+    public String toString() {
+        return "ok:"+isOk()+" code:"+getCode()+" msg:"+getMsg();
+    }
 }
