@@ -2,7 +2,9 @@ package com.example.newbiechen.ireader.model.remote;
 
 import android.util.Log;
 
+import com.example.newbiechen.ireader.BuildConfig;
 import com.example.newbiechen.ireader.utils.Constant;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
 
@@ -24,7 +26,7 @@ public class RemoteHelper {
     private Retrofit mRetrofit;
     private OkHttpClient mOkHttpClient;
     private RemoteHelper(){
-        mOkHttpClient = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder=new OkHttpClient.Builder()
                 .addNetworkInterceptor(
                         new Interceptor() {
                             @Override
@@ -37,7 +39,11 @@ public class RemoteHelper {
                                 return response;
                             }
                         }
-                ).build();
+                );
+        if(BuildConfig.DEBUG){
+            builder.addNetworkInterceptor(new StethoInterceptor());
+        }
+        mOkHttpClient = builder.build();
 
         mRetrofit = new Retrofit.Builder()
                 .client(mOkHttpClient)
