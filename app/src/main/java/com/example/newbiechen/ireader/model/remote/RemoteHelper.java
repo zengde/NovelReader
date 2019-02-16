@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.newbiechen.ireader.BuildConfig;
 import com.example.newbiechen.ireader.utils.Constant;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.example.newbiechen.ireader.utils.StethoUtils;
 
 import java.io.IOException;
 
@@ -41,7 +41,7 @@ public class RemoteHelper {
                         }
                 );
         if(BuildConfig.DEBUG){
-            builder.addNetworkInterceptor(new StethoInterceptor());
+            builder.addNetworkInterceptor(StethoUtils.addInterceptor());
         }
         mOkHttpClient = builder.build();
 

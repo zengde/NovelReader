@@ -324,6 +324,13 @@ public class CollBookBean implements Parcelable{
         this.isLocal = isLocal;
     }
 
+    public String getExt(){
+        if(!isLocal)
+            return "net";
+        String ext=cover.substring(cover.lastIndexOf(".")+1);
+        return ext;
+    }
+
     @Override
     public int describeContents() {
         return 0;

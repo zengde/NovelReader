@@ -1,5 +1,7 @@
 package com.example.newbiechen.ireader.ui.adapter.view;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -46,7 +48,7 @@ public class CollBookHolder extends ViewHolderImpl<CollBookBean>{
         if (value.isLocal()){
             //本地文件的图片
             Glide.with(getContext())
-                    .load(R.drawable.ic_local_file)
+                    .load(getLocalCover(value.getExt()))
                     .fitCenter()
                     .into(mIvCover);
         }
@@ -85,5 +87,15 @@ public class CollBookHolder extends ViewHolderImpl<CollBookBean>{
     @Override
     protected int getItemLayoutId() {
         return R.layout.item_coll_book;
+    }
+
+    protected int getLocalCover(String ext){
+        //chm,ebk,epub,pdf,txt,umd
+        Context ctx=getContext();
+        int resid=ctx.getResources().getIdentifier("cover_"+ext,"drawable",ctx.getPackageName());
+        if(resid==0){
+            resid=R.drawable.cover_default_new;
+        }
+        return resid;
     }
 }

@@ -4,7 +4,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="@drawable/selector_common_bg"
-	android:orientation="vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 	
 	<View
 		android:layout_width="match_parent"

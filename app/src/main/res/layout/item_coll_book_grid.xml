@@ -7,18 +7,18 @@
 
     <ImageView
         android:id="@+id/coll_book_iv_cover"
-        android:layout_width="45dp"
-        android:layout_height="60dp"
+        android:layout_width="90dp"
+        android:layout_height="120dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_book_loading"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
         android:layout_below="@+id/coll_book_iv_cover"
         android:orientation="vertical">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxEms="15"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/nb.text.default"
             android:textSize="16sp"
             tools:text="逆鳞"/>
@@ -47,12 +47,11 @@
             android:id="@+id/coll_book_tv_chapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/coll_book_tv_lately_update"
-            android:layout_marginTop="4dp"
+            android:layout_alignTop="@id/coll_book_tv_lately_update"
             android:layout_toEndOf="@id/coll_book_tv_lately_update"
             android:ellipsize="end"
             android:maxEms="14"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textSize="12sp"
             android:textColor="@color/nb.text.common_h2"
             tools:text="第二卷、逆水行舟！第四百六十五章、打蛇七寸！"/>

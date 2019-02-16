@@ -64,6 +64,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_batch_mode"
+        android:title="@string/nb.menu.action.batch_manage"
+        android:icon="@drawable/ic_menu_batch"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/nb.menu.action.setting"
         android:icon="@drawable/ic_menu_setting"
