@@ -25,8 +25,10 @@ import com.example.newbiechen.ireader.presenter.BookShelfPresenter;
 import com.example.newbiechen.ireader.presenter.contract.BookShelfContract;
 import com.example.newbiechen.ireader.ui.activity.ReadActivity;
 import com.example.newbiechen.ireader.ui.adapter.CollBookAdapter;
+import com.example.newbiechen.ireader.ui.adapter.GlBookAdapter;
 import com.example.newbiechen.ireader.ui.base.BaseMVPFragment;
 import com.example.newbiechen.ireader.utils.RxUtils;
+import com.example.newbiechen.ireader.utils.SharedPreUtils;
 import com.example.newbiechen.ireader.utils.ToastUtils;
 import com.example.newbiechen.ireader.widget.adapter.WholeAdapter;
 import com.example.newbiechen.ireader.widget.itemdecoration.DividerItemDecoration;
@@ -50,7 +52,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     ScrollRefreshRecyclerView mRvContent;
 
     /************************************/
-    private CollBookAdapter mCollBookAdapter;
+    private GlBookAdapter mCollBookAdapter;
     private FooterItemView mFooterItem;
 
     //是否是第一次进入
@@ -82,8 +84,9 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
 
     private void setUpAdapter() {
         //添加Footer
-        mCollBookAdapter = new CollBookAdapter();
-        setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+        mCollBookAdapter = new GlBookAdapter();
+        boolean shelfGrid=SharedPreUtils.getInstance().getBoolean("shelf_list_type",false);
+        setRecyclerViewLayoutManager(shelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER:LayoutManagerType.LINEAR_LAYOUT_MANAGER);
         mRvContent.addItemDecoration(new DividerItemDecoration(getContext()));
         mRvContent.setAdapter(mCollBookAdapter);
     }
@@ -109,6 +112,13 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         }
 
         mRvContent.setLayoutManager(mLayoutManager);
+    }
+
+    public void changeShelfType(Boolean shelfGrid){
+        LayoutManagerType layoutManagerType=shelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER: LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        setRecyclerViewLayoutManager(layoutManagerType);
+        mCollBookAdapter.changeShelfType(shelfGrid);
+        //mCollBookAdapter.notifyDataSetChanged();
     }
 
     @Override

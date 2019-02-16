@@ -20,13 +20,13 @@ import java.util.List;
 
 public abstract class WholeAdapter<T> extends BaseListAdapter<T>{
     private static final String TAG = "WholeAdapter";
-    private static final int TYPE_ITEM = 0;
+    protected static final int TYPE_ITEM = 0;
 
     //刷新类
     private LoadMoreDelegate mLoadDelegate = null;
 
-    private final ArrayList<WholeAdapter.ItemView> mHeaderList = new ArrayList<>(2);
-    private final ArrayList<WholeAdapter.ItemView> mFooterList = new ArrayList<>(2);
+    protected final ArrayList<WholeAdapter.ItemView> mHeaderList = new ArrayList<>(2);
+    protected final ArrayList<WholeAdapter.ItemView> mFooterList = new ArrayList<>(2);
 
 
     public WholeAdapter(){

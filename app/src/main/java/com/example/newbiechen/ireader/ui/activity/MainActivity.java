@@ -108,6 +108,13 @@ public class MainActivity extends BaseTabActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
+
+        MenuItem item=menu.findItem(R.id.action_shelf_mode);
+        SharedPreUtils sp=SharedPreUtils.getInstance();
+        boolean shelfGrid= sp.getBoolean("shelf_list_type",false);
+        item.setTitle(shelfGrid? "列表模式":"图墙模式");
+        item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -155,10 +162,19 @@ public class MainActivity extends BaseTabActivity{
             case R.id.action_settings:
                 break;
             case R.id.action_shelf_mode:
-                item.setTitle("列表模式");
-                item.setIcon(R.drawable.ic_menu_listview);
+                SharedPreUtils sp=SharedPreUtils.getInstance();
+                boolean shelfGrid= sp.getBoolean("shelf_list_type",false);
+                shelfGrid=!shelfGrid;
+                sp.putBoolean("shelf_list_type",shelfGrid);
 
-                ((BookShelfFragment) mFragmentList.get(0)).setRecyclerViewLayoutManager(BookShelfFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
+                item.setTitle(shelfGrid? "列表模式":"图墙模式");
+                item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
+
+                BookShelfFragment bookShelfFragment=((BookShelfFragment) mFragmentList.get(0));
+                if(bookShelfFragment!=null){
+                    bookShelfFragment.changeShelfType(shelfGrid);
+                }
+
                 break;
             default:
                 break;
