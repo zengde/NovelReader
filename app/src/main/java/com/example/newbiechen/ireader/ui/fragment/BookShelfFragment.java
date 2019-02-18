@@ -65,6 +65,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     }
     protected LayoutManagerType mCurrentLayoutManagerType;
     protected RecyclerView.LayoutManager mLayoutManager;
+    protected Boolean shelfGrid;
 
     @Override
     protected int getContentId() {
@@ -85,7 +86,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     private void setUpAdapter() {
         //添加Footer
         mCollBookAdapter = new GlBookAdapter();
-        boolean shelfGrid=SharedPreUtils.getInstance().getBoolean("shelf_list_type",false);
+        shelfGrid=SharedPreUtils.getInstance().getBoolean("shelf_list_type",false);
         setRecyclerViewLayoutManager(shelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER:LayoutManagerType.LINEAR_LAYOUT_MANAGER);
         mRvContent.addItemDecoration(new DividerItemDecoration(getContext()));
         mRvContent.setAdapter(mCollBookAdapter);
@@ -114,10 +115,11 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         mRvContent.setLayoutManager(mLayoutManager);
     }
 
-    public void changeShelfType(Boolean shelfGrid){
-        LayoutManagerType layoutManagerType=shelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER: LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+    public void changeShelfType(Boolean newshelfGrid){
+        LayoutManagerType layoutManagerType=newshelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER: LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         setRecyclerViewLayoutManager(layoutManagerType);
-        mCollBookAdapter.changeShelfType(shelfGrid);
+        shelfGrid=newshelfGrid;
+        mCollBookAdapter.changeShelfType(newshelfGrid);
         //mCollBookAdapter.notifyDataSetChanged();
     }
 
@@ -373,8 +375,9 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     class FooterItemView implements WholeAdapter.ItemView {
         @Override
         public View onCreateView(ViewGroup parent) {
+            int layout=shelfGrid? R.layout.footer_book_shelf_grid:R.layout.footer_book_shelf;
             View view = LayoutInflater.from(getContext())
-                    .inflate(R.layout.footer_book_shelf, parent, false);
+                    .inflate(layout, parent, false);
             view.setOnClickListener(
                     (v) -> {
                         //设置RxBus回调
@@ -385,6 +388,11 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
 
         @Override
         public void onBindView(View view) {
+        }
+
+        @Override
+        public int hashCode() {
+            return shelfGrid? 10000:10001;
         }
     }
 
