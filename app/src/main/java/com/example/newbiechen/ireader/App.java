@@ -5,15 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.newbiechen.ireader.service.DownloadService;
+import com.example.newbiechen.ireader.utils.LocalArcaSender;
 import com.example.newbiechen.ireader.utils.StethoUtils;
 import com.squareup.leakcanary.LeakCanary;
+
+import org.acra.*;
+import org.acra.annotation.*;
 
 /**
  * Created by newbiechen on 17-4-15.
  */
-
+@AcraCore(reportSenderFactoryClasses = LocalArcaSender.class)
 public class App extends Application {
     private static Context sInstance;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        ACRA.init(this);
+    }
 
     @Override
     public void onCreate() {
