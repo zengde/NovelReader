@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_shelf_mode"
+        android:title="@string/nb.menu.action.shelf_mode"
+        android:icon="@drawable/ic_menu_gridview"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_batch_mode"
+        android:title="@string/nb.menu.action.batch_manage"
+        android:icon="@drawable/ic_menu_batch"
+        app:showAsAction="never" />
+
+</menu>

@@ -121,4 +121,11 @@ public class ScrollRefreshRecyclerView extends ScrollRefreshLayout {
             }
         }
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mRecyclerView.setAdapter(null);
+        mRecyclerView = null;
+    }
 }

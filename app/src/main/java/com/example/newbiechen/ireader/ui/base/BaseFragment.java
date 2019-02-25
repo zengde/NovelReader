@@ -24,6 +24,8 @@ public abstract class BaseFragment extends Fragment{
     private View root = null;
     private Unbinder unbinder;
 
+    private boolean isViewInitFinished;
+
     @LayoutRes
     protected abstract int getContentId();
 
@@ -63,6 +65,7 @@ public abstract class BaseFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         int resId = getContentId();
         root = inflater.inflate(resId,container,false);
+        unbinder = ButterKnife.bind(this,root);
         return root;
     }
 
@@ -70,17 +73,45 @@ public abstract class BaseFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initData(savedInstanceState);
-        unbinder = ButterKnife.bind(this,root);
         initWidget(savedInstanceState);
         initClick();
         processLogic();
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        isViewInitFinished = true;
+    }
+
+    /**
+     * 懒加载请求数据
+     */
+    protected void getData(){
+
+    }
+    protected void requestData(boolean isVisibleToUser){
+        if(isViewInitFinished && isVisibleToUser){
+            getData();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        requestData(isVisibleToUser);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
-
-        unbinder.unbind();
 
         if (mDisposable != null){
             mDisposable.clear();

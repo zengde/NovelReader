@@ -15,7 +15,8 @@ import org.acra.annotation.*;
 /**
  * Created by newbiechen on 17-4-15.
  */
-@AcraCore(reportSenderFactoryClasses = LocalArcaSender.class)
+@AcraCore(reportSenderFactoryClasses = LocalArcaSender.class,
+        logcatArguments = { "-t", "200","-v","threadtime", "AcraCustom:D", "*:S" })
 public class App extends Application {
     private static Context sInstance;
 

@@ -16,12 +16,11 @@ public class GlBookAdapter extends CollBookAdapter {
     private boolean shelfGrid;
     private int TYPE_ITEM_GRID=1;
 
-    public GlBookAdapter() {
-        SharedPreUtils sp=SharedPreUtils.getInstance();
-        this.shelfGrid= sp.getBoolean("shelf_list_type",false);
+    public GlBookAdapter(Boolean shelfGrid) {
+        this.shelfGrid= shelfGrid;
     }
 
-    public void changeShelfType(Boolean shelfGrid){
+    public void setShelfType(Boolean shelfGrid){
         this.shelfGrid=shelfGrid;
     }
 

@@ -1,13 +1,20 @@
 package com.example.newbiechen.ireader.ui.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,6 +34,7 @@ import com.example.newbiechen.ireader.ui.activity.ReadActivity;
 import com.example.newbiechen.ireader.ui.adapter.CollBookAdapter;
 import com.example.newbiechen.ireader.ui.adapter.GlBookAdapter;
 import com.example.newbiechen.ireader.ui.base.BaseMVPFragment;
+import com.example.newbiechen.ireader.utils.DebugUtils;
 import com.example.newbiechen.ireader.utils.RxUtils;
 import com.example.newbiechen.ireader.utils.SharedPreUtils;
 import com.example.newbiechen.ireader.utils.ToastUtils;
@@ -59,12 +67,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     private boolean isInit = true;
 
     private static final int SPAN_COUNT = 3;
-    public enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
-        LINEAR_LAYOUT_MANAGER
-    }
-    protected LayoutManagerType mCurrentLayoutManagerType;
-    protected RecyclerView.LayoutManager mLayoutManager;
+
     protected Boolean shelfGrid;
 
     @Override
@@ -80,46 +83,31 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     @Override
     protected void initWidget(Bundle savedInstanceState) {
         super.initWidget(savedInstanceState);
+
+        shelfGrid=SharedPreUtils.getInstance().getBoolean("shelf_list_type",false);
+
         setUpAdapter();
     }
 
     private void setUpAdapter() {
         //添加Footer
-        mCollBookAdapter = new GlBookAdapter();
-        shelfGrid=SharedPreUtils.getInstance().getBoolean("shelf_list_type",false);
-        setRecyclerViewLayoutManager(shelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER:LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+        mCollBookAdapter = new GlBookAdapter(shelfGrid);
+        setRecyclerViewLayoutManager(shelfGrid);
         mRvContent.addItemDecoration(new DividerItemDecoration(getContext()));
         mRvContent.setAdapter(mCollBookAdapter);
     }
 
     /**
      * Set RecyclerView's LayoutManager to the one given.
-     *
-     * @param layoutManagerType Type of layout manager to switch to.
      */
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
-                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getContext());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getContext());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
+    public void setRecyclerViewLayoutManager(Boolean isGrid) {
+        RecyclerView.LayoutManager mLayoutManager=isGrid? new GridLayoutManager(getContext(), SPAN_COUNT):new LinearLayoutManager(getContext());
         mRvContent.setLayoutManager(mLayoutManager);
     }
 
     public void changeShelfType(Boolean newshelfGrid){
-        LayoutManagerType layoutManagerType=newshelfGrid? LayoutManagerType.GRID_LAYOUT_MANAGER: LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        setRecyclerViewLayoutManager(layoutManagerType);
-        shelfGrid=newshelfGrid;
-        mCollBookAdapter.changeShelfType(newshelfGrid);
+        setRecyclerViewLayoutManager(newshelfGrid);
+        mCollBookAdapter.setShelfType(newshelfGrid);
         //mCollBookAdapter.notifyDataSetChanged();
     }
 
@@ -181,7 +169,9 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         addDisposable(deleteDisp);
 
         mRvContent.setOnRefreshListener(
-                () -> mPresenter.updateCollBooks(mCollBookAdapter.getItems())
+                () -> {
+                    mPresenter.updateCollBooks(mCollBookAdapter.getItems());
+                }
         );
 
         mCollBookAdapter.setOnItemClickListener(
@@ -340,7 +330,6 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
             mFooterItem = new FooterItemView();
             mCollBookAdapter.addFooterView(mFooterItem);
         }
-
         if (mRvContent.isRefreshing()) {
             mRvContent.finishRefresh();
         }
@@ -401,4 +390,39 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         super.onResume();
         mPresenter.refreshCollBooks();
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_shelf, menu);
+
+        MenuItem item=menu.findItem(R.id.action_shelf_mode);
+        item.setTitle(shelfGrid? "列表模式":"图墙模式");
+        item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_shelf_mode:
+                shelfGrid=!shelfGrid;
+                SharedPreUtils.getInstance().putBoolean("shelf_list_type",shelfGrid);
+
+                item.setTitle(shelfGrid? "列表模式":"图墙模式");
+                item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
+
+                changeShelfType(shelfGrid);
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -5,13 +5,17 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +28,7 @@ import com.example.newbiechen.ireader.ui.fragment.BookShelfFragment;
 import com.example.newbiechen.ireader.ui.fragment.CommunityFragment;
 import com.example.newbiechen.ireader.ui.fragment.FindFragment;
 import com.example.newbiechen.ireader.utils.Constant;
+import com.example.newbiechen.ireader.utils.DebugUtils;
 import com.example.newbiechen.ireader.utils.PermissionsChecker;
 import com.example.newbiechen.ireader.utils.SharedPreUtils;
 import com.example.newbiechen.ireader.ui.dialog.SexChooseDialog;
@@ -34,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-
 public class MainActivity extends BaseTabActivity{
     /*************Constant**********/
     private static final int WAIT_INTERVAL = 2000;
@@ -45,6 +48,7 @@ public class MainActivity extends BaseTabActivity{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private static final String TAG = "MainActivity";
     /***************Object*********************/
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private PermissionsChecker mPermissionsChecker;
@@ -108,13 +112,6 @@ public class MainActivity extends BaseTabActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
-
-        MenuItem item=menu.findItem(R.id.action_shelf_mode);
-        SharedPreUtils sp=SharedPreUtils.getInstance();
-        boolean shelfGrid= sp.getBoolean("shelf_list_type",false);
-        item.setTitle(shelfGrid? "列表模式":"图墙模式");
-        item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -160,21 +157,6 @@ public class MainActivity extends BaseTabActivity{
             case R.id.action_night_mode:
                 break;
             case R.id.action_settings:
-                break;
-            case R.id.action_shelf_mode:
-                SharedPreUtils sp=SharedPreUtils.getInstance();
-                boolean shelfGrid= sp.getBoolean("shelf_list_type",false);
-                shelfGrid=!shelfGrid;
-                sp.putBoolean("shelf_list_type",shelfGrid);
-
-                item.setTitle(shelfGrid? "列表模式":"图墙模式");
-                item.setIcon(shelfGrid? R.drawable.ic_menu_listview:R.drawable.ic_menu_gridview);
-
-                BookShelfFragment bookShelfFragment=((BookShelfFragment) mFragmentList.get(0));
-                if(bookShelfFragment!=null){
-                    bookShelfFragment.changeShelfType(shelfGrid);
-                }
-
                 break;
             default:
                 break;

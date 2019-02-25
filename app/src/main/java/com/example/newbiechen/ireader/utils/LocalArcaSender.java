@@ -15,6 +15,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LocalArcaSender implements ReportSenderFactory {
     @NonNull
@@ -38,7 +40,10 @@ class LocalSender implements ReportSender {
         // the destination
         File dir=FileUtils.isSdCardExist()? ctx.getExternalFilesDir(null):ctx.getFilesDir();
 
-        File logFile = new File(dir, "arca-log.txt");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String filename= "acra-log-"+sdf.format(new Date())+".txt";
+
+        File logFile = new File(dir, filename);
 
         try {
             crashReport = new FileWriter(logFile, true);
